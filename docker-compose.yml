@@ -7,17 +7,24 @@ x-logging:
 
 services:
   server:
-    image: judge0/judge0:latest
+    image: compiler-45/judge0:local
+    build:
+      context: .
+      target: production
     volumes:
       - ./judge0.conf:/judge0.conf:ro
+    # Keep direct API access local; expose it via a TLS reverse proxy.
     ports:
-      - "2358:2358"
+      - "127.0.0.1:2358:2358"
     privileged: true
     <<: *default-logging
     restart: always
 
   worker:
-    image: judge0/judge0:latest
+    image: compiler-45/judge0:local
+    build:
+      context: .
+      target: production
     command: ["./scripts/workers"]
     volumes:
       - ./judge0.conf:/judge0.conf:ro
