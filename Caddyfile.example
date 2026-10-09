@@ -1,0 +1,6 @@
+# Rename to Caddyfile and replace compiler.example.com with your real DNS name.
+# Point the domain's A/AAAA record at this server and allow inbound TCP ports 80 and 443.
+compiler.example.com {
+    encode zstd gzip
+    reverse_proxy 127.0.0.1:2358
+}
