@@ -1,0 +1,33 @@
+name: Compiler 45 CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate Ruby seed syntax
+        run: ruby -c db/seeds.rb
+
+      - name: Validate smoke-test shell syntax
+        run: bash -n scripts/smoke-test.sh
+
+      - name: Validate Compose configuration
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp judge0.conf.example judge0.conf
+          docker compose config --quiet
+          rm -f judge0.conf
